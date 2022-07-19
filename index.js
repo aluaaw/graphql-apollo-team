@@ -6,8 +6,8 @@ const typeDefs = gql`
     teams: [Team]
     teamsWithSupplies: [Team]
     team(id: Int): Team
-    equipments: [Equipments]
-    supplies: [Supplies]
+    equipments: [Equipment]
+    supplies: [Supply]
   }
   type Team {
     id: Int
@@ -17,15 +17,15 @@ const typeDefs = gql`
     mascot: String
     cleaning_duty: String
     project: String
-    supplies: [Supplies]
+    supplies: [Supply]
   }
-  type Equipments {
+  type Equipment {
     id: String
     used_by: String
     count: Int
     new_or_used: String
   }
-  type Supplies {
+  type Supply {
     id: String
     team: Int
   }
