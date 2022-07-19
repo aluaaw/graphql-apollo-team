@@ -9,6 +9,21 @@ const typeDefs = gql`
     equipments: [Equipment]
     supplies: [Supply]
   }
+  type Mutation {
+    insertEquipment(
+      id: String
+      used_by: String
+      count: Int
+      new_or_used: String
+    ): Equipment
+    editEquipment(
+      id: String
+      used_by: String
+      count: Int
+      new_or_used: String
+    ): Equipment
+    deleteEquipment(id: String): Equipment
+  }
   type Team {
     id: Int
     manager: String
@@ -46,6 +61,37 @@ const resolvers = {
       })[0],
     equipments: () => database.equipments,
     supplies: () => database.supplies,
+  },
+  Mutation: {
+    insertEquipment: (parent, args, context, info) => {
+      database.equipments.push(args);
+      return args;
+    },
+    editEquipment: (parent, args, context, info) => {
+      console.log(
+        "what is this? ",
+        database.equipments.filter((equipment) => {
+          return args.id === equipment.id;
+        })[0]
+      );
+      return Object.assign(
+        database.equipments.filter((equipment) => {
+          return args.id === equipment.id;
+        })[0],
+        args
+      );
+    },
+    deleteEquipment: (parent, args, context, info) => {
+      // 삭제'된' 항목을 return
+      const deleted = database.equipments.filter((equipment) => {
+        return args.id === equipment.id;
+      })[0];
+      // 실질적으로 삭제 (새로운 배열로 덮는다)
+      database.equipments = database.equipments.filter((equipment) => {
+        return equipment.id !== args.id;
+      });
+      return deleted;
+    },
   },
 };
 const server = new ApolloServer({ typeDefs, resolvers });
